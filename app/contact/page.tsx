@@ -9,7 +9,7 @@ const Contact = () => {
                 Contact us
             </h1>
             <p className="mt-1 text-gray-600">
-                We'd love to talk about how we can help you.
+                We&aposd love to talk about how we can help you.
             </p>
             </div>
         </div>
@@ -58,7 +58,7 @@ const Contact = () => {
 
                 <div className="mt-3 text-center">
                 <p className="text-sm text-gray-500">
-                    We'll get back to you in 1-2 business days.
+                    We&aposll get back to you in 1-2 business days.
                 </p>
                 </div>
             </form>
@@ -70,7 +70,7 @@ const Contact = () => {
             <svg className="w-9 h-9 text-gray-800 mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
             <div className="mt-5">
                 <h3 className="text-lg font-semibold text-gray-800">Knowledgebase</h3>
-                <p className="mt-1 text-gray-500">We're here to help with any questions or code.</p>
+                <p className="mt-1 text-gray-500">We&aposre here to help with any questions or code.</p>
                 <p className="mt-5 inline-flex items-center gap-x-1 font-medium text-blue-600">
                 Contact support
                 <svg className="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
