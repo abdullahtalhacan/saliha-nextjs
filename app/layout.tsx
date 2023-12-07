@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Header from './inc/Header'
 import Footer from './inc/Footer'
+import ColorPicker from './components/ColorPicker'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} transition-all duration-300`}>
+        <ColorPicker />
         <Header />
           <main>
             {children}

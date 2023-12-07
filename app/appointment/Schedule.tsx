@@ -29,6 +29,16 @@ const Schedule = () => {
     return monthNumber === 1 ? 12 : monthNumber - 1
   }
 
+  const fixedYear = (year: number, month: number) => {
+    let fixedYear = year
+    if(month === 12)
+      fixedYear = fixedYear + 1
+    if(month === 1)
+      fixedYear = fixedYear - 1
+
+    return fixedYear
+  }
+
   const generateMonthArray = (year: number, month: number) => {
       const daysInMonth = getDaysInMonth(year, month)
       const firstDayOfMonth = getFirstDayOfMonth(year, month)
@@ -76,6 +86,25 @@ const Schedule = () => {
       return daysArray;
   }
 
+  const generateTimeSlot = (startingTime: number, endingTime: number) => {
+    const startTime = new Date();
+    startTime.setHours(startingTime, 0, 0);
+    const endTime = new Date();
+    endTime.setHours(endingTime, 0, 0);
+    const timeArray = [];
+    for (let currentTime = new Date(startTime); currentTime <= endTime; currentTime.setHours(currentTime.getHours() + 1)) {
+      timeArray.push(currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
+    }
+    return timeArray;
+  }
+
+  const getCurrentTimeInLocation = (timezone: string) => {
+    const options = { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour24: true };
+    //@ts-ignore
+    const formatter = new Intl.DateTimeFormat('tr-TR', options);
+    return formatter.format(new Date());
+  }
+
   const findIndex = (array: {}[][], targetNumber: number, targetMonth: string) => {
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < array[i].length; j++) {
@@ -89,19 +118,31 @@ const Schedule = () => {
   }
 
   const lang = 'en'
-  const areaHight = 88 //px
+  const areaHight = 88 // 88 | 176 (px)
   const date = new Date()
   const ymd = date.toISOString().split('T')[0].split('-')
   const currentYear = parseInt(ymd[0])
   const currentMonth = parseInt(ymd[1])    
   const currentDay = ymd[2]
-  
-  const daysArray = generateMonthArray(currentYear, currentMonth);
+  const currentTime = getCurrentTimeInLocation('Europe/Istanbul')
+  const timeSlot = generateTimeSlot(12, 21)
+
+  const [activeMonth, setActiveMonth] = useState(currentMonth)
+  const [activeYear, setActiveYear] = useState(currentYear)
+
+  const [daysArray, setDaysArray] = useState(generateMonthArray(currentYear, currentMonth))
+
+  useEffect(() => {
+    setDaysArray(generateMonthArray(fixedYear(currentYear, currentMonth), activeMonth))//sorun var 
+    activeMonth === currentMonth ? setActiveRow(selectedDayIndex.row) : setActiveRow(0)
+  }, [activeMonth])
 
   const todaysIndex: any | {
       row: number;
       column: number;
   } = findIndex(daysArray, parseInt(currentDay), getMonthName(currentMonth, 'short'))
+
+  const [selectedDayIndex, setSelectedDayIndex] = useState(todaysIndex)
 
   const daysOfWeek = {
     en: [
@@ -123,9 +164,7 @@ const Schedule = () => {
       { short: 'Cts', long: 'Cumartesi' }
     ]
   };
-
-
-  const [activeMonth, setActiveMonth] = useState(currentMonth)
+  
   const months = [
     {
       name: getMonthName(currentMonth, "long"),
@@ -169,6 +208,11 @@ const Schedule = () => {
           </button>
         ))}
       </div>
+
+      <span>{currentYear }</span><br />
+      <span>{ JSON.stringify(selectedDayIndex) }</span>
+
+
       <div className="flex space-x-4 items-center justify-center">
         <div
           onClick={() => handlePrevRow()}
@@ -218,15 +262,25 @@ const Schedule = () => {
                   items.map((item, key) => (
                     <div
                     key={key}
+                    onClick={() => item.month === getMonthName(activeMonth, 'short') 
+                      ? setSelectedDayIndex({row: index, column: key}) 
+                      : undefined
+                    }
                     className={`w-full flex flex-col px-8 space-y-2 text-center items-center select-none justify-center py-4 ${
-                      item.month === getMonthName(currentMonth, 'short') ? (
-                        todaysIndex.row === index && todaysIndex.column === key 
-                          ? 'text-white bg-indigo-600 cursor-pointer' 
+                      item.month === getMonthName(activeMonth, 'short') ? (
+                        selectedDayIndex.row === index && selectedDayIndex.column === key 
+                          ? (item.month === getMonthName(currentMonth, 'short') ? 'text-white bg-indigo-600 cursor-pointer' : '') 
                           : 'hover:text-white hover:bg-indigo-600 cursor-pointer') 
                       : ('text-zinc-400 cursor-not-allowed')
                     }`}
                   >
-                    <span className="font-bold">{ item.number }</span>
+                    <span className={`font-bold ${
+                      todaysIndex.row === index && todaysIndex.column === key
+                      ? 'px-2 text-white bg-indigo-600 rounded-full' 
+                      : ''
+                      }`}>
+                        { item.number }
+                    </span>
                     <span>{ item.month }</span>
                   </div>
                   ))
@@ -262,7 +316,7 @@ const Schedule = () => {
         </h3>
         <div className="flex space-x-4 text-sm">
           <span className="text-indigo-700 font-medium">
-            Istanbul Time (UTC +3) {"current time add"}
+            Istanbul Time (UTC +3) { currentTime }
           </span>
           <div className="flex items-center space-x-2 text-zinc-950/70">
             <svg
@@ -291,11 +345,13 @@ const Schedule = () => {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4">
-        {Array.from(new Array(8), (_, key) => (
-          <button key={key} className="py-2 text-indigo-700 hover:text-white hover:bg-indigo-600 font-semibold border border-zinc-950/20 rounded-lg">
-            1{key}:00
-          </button>
-        ))}
+        {
+          Array.from(new Array(timeSlot.length), (_, index: number) => (
+            <button key={index} className="py-2 text-indigo-700 hover:text-white hover:bg-indigo-600 font-semibold border border-zinc-950/20 rounded-lg">
+              { timeSlot[index] }
+            </button>
+          ))
+        }
       </div>
     </div>
   );

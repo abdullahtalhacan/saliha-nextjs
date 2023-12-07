@@ -2,7 +2,10 @@ import React from 'react'
 import Schedule from './Schedule'
 
 const Appointment = () => {
-
+    const ageRange = {
+        min: 15,
+        max: 51
+    }
     return (
         <div className="max-w-5xl px-4 py-5 sm:px-6 lg:px-8 lg:py-14 mx-auto">
             <div className="bg-white rounded-xl shadow p-4 sm:p-7">
@@ -101,15 +104,7 @@ const Appointment = () => {
                     <div className="sm:col-span-9">
                         <div className="sm:flex">
                             <input id="af-account-phone" type="text" className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="+x(xxx)xxx-xx-xx" />
-
                         </div>
-
-                        <p className="mt-3">
-                            <a className="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline font-medium" href="../docs/index.html">
-                                <svg className="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 12h8" /><path d="M12 8v8" /></svg>
-                                Add phone
-                            </a>
-                        </p>
                     </div>
 
                     <div className="sm:col-span-3">
@@ -119,32 +114,35 @@ const Appointment = () => {
                     </div>
 
                     <div className="sm:col-span-9">
-                        <div className="sm:flex">
-                            <label htmlFor="af-account-gender-checkbox" className="flex py-2 px-3 block w-full border border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                                <input type="radio" name="af-account-gender-checkbox" className="shrink-0 mt-0.5 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="af-account-gender-checkbox" defaultChecked />
-                                <span className="text-sm text-gray-500 ms-3">Male</span>
-                            </label>
+                        <fieldset>
+                            <div className="sm:flex">
+                                <label htmlFor="male" className="flex py-2 px-3 w-full border border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 disabled:opacity-50 disabled:pointer-events-none">
+                                    <input id='male' type="radio" name="gender" value="male" className="shrink-0 mt-0.5 border-gray-300 rounded-full text-blue-600 focus:ring-0 focus:ring-offset-0 disabled:opacity-50 disabled:pointer-events-none" />
+                                    <span className="text-sm text-gray-500 ms-3">Male</span>
+                                </label>
 
-                            <label htmlFor="af-account-gender-checkbox-female" className="flex py-2 px-3 block w-full border border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                                <input type="radio" name="af-account-gender-checkbox" className="shrink-0 mt-0.5 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="af-account-gender-checkbox-female" />
-                                <span className="text-sm text-gray-500 ms-3">Female</span>
-                            </label>
-
-                            <label htmlFor="af-account-gender-checkbox-other" className="flex py-2 px-3 block w-full border border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                                <input type="radio" name="af-account-gender-checkbox" className="shrink-0 mt-0.5 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="af-account-gender-checkbox-other" />
-                                <span className="text-sm text-gray-500 ms-3">Other</span>
-                            </label>
-                        </div>
+                                <label htmlFor="female" className="flex py-2 px-3 w-full border border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 disabled:opacity-50 disabled:pointer-events-none">
+                                    <input id="female" type="radio" name="gender" value="female" className="shrink-0 mt-0.5 border-gray-300 rounded-full text-blue-600 focus:ring-0 focus:ring-offset-0 disabled:opacity-50 disabled:pointer-events-none" />
+                                    <span className="text-sm text-gray-500 ms-3">Female</span>
+                                </label>
+                            </div>
+                        </fieldset>
                     </div>
 
                     <div className="sm:col-span-3">
                         <label htmlFor="af-account-bio" className="inline-block text-sm text-gray-800 mt-2.5">
-                            BIO
+                            Age
                         </label>
                     </div>
 
                     <div className="sm:col-span-9">
-                        <textarea id="af-account-bio" className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" rows={6} placeholder="Type your message..."></textarea>
+                        <select id="af-submit-app-category" className="py-2 px-3 pe-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                            {
+                                Array.from(new Array(ageRange.max - ageRange.min), (_, index) => (
+                                    <option key={index} value={index + ageRange.min}>{ index + ageRange.min }</option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
 
