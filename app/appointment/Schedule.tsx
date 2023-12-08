@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
+import LogPanel from '../components/LogPanel';
 
 const Schedule = () => {
 
@@ -12,12 +13,12 @@ const Schedule = () => {
   }
 
   const getMonthName = (monthNumber: number, format: "short" | "numeric" | "2-digit" | "long" | "narrow" | undefined) => {
-      const date = new Date();
-      date.setMonth(monthNumber - 1);
-    
-      return date.toLocaleString('en-US', {
-        month: format,
-      });
+    const date = new Date();
+    date.setMonth(monthNumber - 1);
+
+    return date.toLocaleString('en-US', {
+      month: format,
+    });
   }
 
   const getNextMonth = (monthNumber: number, next?: boolean) => {
@@ -129,11 +130,13 @@ const Schedule = () => {
 
   const [activeMonth, setActiveMonth] = useState(currentMonth)
   const [activeYear, setActiveYear] = useState(currentYear)
+  const [activeTime, setActiveTime] = useState<string | boolean>(false)
 
   const [daysArray, setDaysArray] = useState(generateMonthArray(currentYear, currentMonth))
 
   useEffect(() => {
-    setDaysArray(generateMonthArray(fixedYear(currentYear, currentMonth), activeMonth))//sorun var 
+    setDaysArray(generateMonthArray(activeMonth === currentMonth ? currentYear : fixedYear(currentYear, currentMonth), activeMonth))//sorun var
+    //aktif yil secilen aya gore deigisecek
     activeMonth === currentMonth ? setActiveRow(selectedDayIndex.row) : setActiveRow(0)
   }, [activeMonth])
 
@@ -193,6 +196,12 @@ const Schedule = () => {
 
   return (
     <div className="space-y-5 select-none">
+      <LogPanel activeMonth={activeMonth}
+      activeYear={activeYear}
+      activeTime={activeTime}
+      activeRow={activeRow}
+      selectedDay={selectedDayIndex}
+      />
       <div className="grid grid-cols-3 gap-3">
         {months.map((item, key) => (
           <button
@@ -208,10 +217,6 @@ const Schedule = () => {
           </button>
         ))}
       </div>
-
-      <span>{currentYear }</span><br />
-      <span>{ JSON.stringify(selectedDayIndex) }</span>
-
 
       <div className="flex space-x-4 items-center justify-center">
         <div
@@ -256,37 +261,39 @@ const Schedule = () => {
                 transform: `translateY(-${areaHight * activeRow}px)`,
               }}
             >
-
-              {
-                daysArray.map((items, index) => 
-                  items.map((item, key) => (
-                    <div
+              {daysArray.map((items, index) =>
+                items.map((item, key) => (
+                  <div
                     key={key}
-                    onClick={() => item.month === getMonthName(activeMonth, 'short') 
-                      ? setSelectedDayIndex({row: index, column: key}) 
-                      : undefined
+                    onClick={() =>
+                      item.month === getMonthName(activeMonth, "short")
+                        ? setSelectedDayIndex({ row: index, column: key })
+                        : undefined
                     }
                     className={`w-full flex flex-col px-8 space-y-2 text-center items-center select-none justify-center py-4 ${
-                      item.month === getMonthName(activeMonth, 'short') ? (
-                        selectedDayIndex.row === index && selectedDayIndex.column === key 
-                          ? (item.month === getMonthName(currentMonth, 'short') ? 'text-white bg-indigo-600 cursor-pointer' : '') 
-                          : 'hover:text-white hover:bg-indigo-600 cursor-pointer') 
-                      : ('text-zinc-400 cursor-not-allowed')
+                      item.month === getMonthName(activeMonth, "short")
+                        ? selectedDayIndex.row === index &&
+                          selectedDayIndex.column === key
+                          ? item.month === getMonthName(currentMonth, "short")
+                            ? "text-white bg-indigo-600 cursor-pointer"
+                            : ""
+                          : "hover:text-white hover:bg-indigo-600 cursor-pointer"
+                        : "text-zinc-400 cursor-not-allowed"
                     }`}
                   >
-                    <span className={`font-bold ${
-                      todaysIndex.row === index && todaysIndex.column === key
-                      ? 'px-2 text-white bg-indigo-600 rounded-full' 
-                      : ''
-                      }`}>
-                        { item.number }
+                    <span
+                      className={`font-bold ${
+                        todaysIndex.row === index && todaysIndex.column === key
+                          ? "px-2 text-white bg-indigo-600 rounded-full"
+                          : ""
+                      }`}
+                    >
+                      {item.number}
                     </span>
-                    <span>{ item.month }</span>
+                    <span>{item.month}</span>
                   </div>
-                  ))
-                )
-              }
-              
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -316,7 +323,7 @@ const Schedule = () => {
         </h3>
         <div className="flex space-x-4 text-sm">
           <span className="text-indigo-700 font-medium">
-            Istanbul Time (UTC +3) { currentTime }
+            Istanbul Time (UTC +3) {currentTime}
           </span>
           <div className="flex items-center space-x-2 text-zinc-950/70">
             <svg
@@ -345,13 +352,15 @@ const Schedule = () => {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4">
-        {
-          Array.from(new Array(timeSlot.length), (_, index: number) => (
-            <button key={index} className="py-2 text-indigo-700 hover:text-white hover:bg-indigo-600 font-semibold border border-zinc-950/20 rounded-lg">
-              { timeSlot[index] }
-            </button>
-          ))
-        }
+        {Array.from(new Array(timeSlot.length), (_, index: number) => (
+          <button
+            key={index}
+            onClick={() => setActiveTime(prev => timeSlot[index])}
+            className={`py-2 text-indigo-700 ${activeTime === timeSlot[index] ? 'text-white bg-indigo-600' : 'hover:text-white hover:bg-indigo-600'} font-semibold border border-zinc-950/20 rounded-lg`}
+          >
+            {timeSlot[index]}
+          </button>
+        ))}
       </div>
     </div>
   );
