@@ -12,14 +12,25 @@ const Schedule = () => {
     return new Date(`${year}-${month}-1`).getDay()
   }
 
-  const getMonthName = (monthNumber: number, format: "short" | "numeric" | "2-digit" | "long" | "narrow" | undefined) => {
+  /**
+   * Get the name of a month based on its number.
+   * @param {number} monthNumber - The month number (1-12).
+   * @param {"short" | "numeric" | "2-digit" | "long" | "narrow" | undefined} format - The format of the month name.
+   * @param {string} [lang="tr-TR"] - The language code for localization (default is "tr-TR").
+   * @returns {string} The name of the month.
+  */
+  const getMonthName = (
+    monthNumber: number,
+    format: "short" | "numeric" | "2-digit" | "long" | "narrow" | undefined,
+    lang: string = "en"
+  ): string => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
 
-    return date.toLocaleString('en-US', {
+    return date.toLocaleString(lang, {
       month: format,
     });
-  }
+  };
 
   const getNextMonth = (monthNumber: number, next?: boolean) => {
       let nextMonth = monthNumber === 12 ? 1 : monthNumber + 1
@@ -63,20 +74,20 @@ const Schedule = () => {
                   // Fill in the days from the previous month
                   week[col] = {
                     number: lastDayOfPrevMonth - daysToFillFromPrevMonth + 1 + col,
-                    month: getMonthName(getPrevMonth(month), 'short')
+                    month: getMonthName(getPrevMonth(month), 'short', lang)
                   }
               } else if (currentDay <= daysInMonth) {
                   // Fill in the days of the current month
                   week[col] = {
                     number: currentDay,
-                    month: getMonthName(month, 'short')
+                    month: getMonthName(month, 'short', lang)
                   };
                   currentDay++;
               } else {
                   // Fill in the days from the next month
                   week[col] = {
                     number: currentDay - daysInMonth,
-                    month: getMonthName(getNextMonth(month), 'short')
+                    month: getMonthName(getNextMonth(month), 'short', lang)
                   }
                   currentDay++;
               }
@@ -99,12 +110,18 @@ const Schedule = () => {
     return timeArray;
   }
 
-  const getCurrentTimeInLocation = (timezone: string) => {
-    const options = { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour24: true };
-    //@ts-ignore
-    const formatter = new Intl.DateTimeFormat('tr-TR', options);
+  /**
+   * Get the current time in a specified timezone.
+   *
+   * @param {string} timezone - The timezone identifier.
+   * @param {string} [lang='tr-TR'] - The language code for localization (default is 'tr-TR').
+   * @returns {string} The formatted current time in the specified timezone.
+  */
+  const getCurrentTimeInLocation = (timezone: string, lang: string = 'tr-TR'): string => {
+    const options: Intl.DateTimeFormatOptions = { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false };
+    const formatter = new Intl.DateTimeFormat(lang, options);
     return formatter.format(new Date());
-  }
+  };
 
   const findIndex = (array: {}[][], targetNumber: number, targetMonth: string) => {
     for (let i = 0; i < array.length; i++) {
@@ -118,7 +135,7 @@ const Schedule = () => {
     return -1; // Not found
   }
 
-  const lang = 'en'
+  const lang = 'tr-TR'
   const areaHight = 88 // 88 | 176 (px)
   const date = new Date()
   const ymd = date.toISOString().split('T')[0].split('-')
@@ -135,20 +152,33 @@ const Schedule = () => {
   const [daysArray, setDaysArray] = useState(generateMonthArray(currentYear, currentMonth))
 
   useEffect(() => {
-    setDaysArray(generateMonthArray(activeMonth === currentMonth ? currentYear : fixedYear(currentYear, currentMonth), activeMonth))//sorun var
-    //aktif yil secilen aya gore deigisecek
-    activeMonth === currentMonth ? setActiveRow(selectedDayIndex.row) : setActiveRow(0)
+    setDaysArray(generateMonthArray(activeMonth === currentMonth ? currentYear : fixedYear(currentYear, currentMonth), activeMonth))
+    if(currentMonth === activeMonth){
+      setActiveYear(currentYear)
+    }else(
+      setActiveYear(fixedYear(currentYear, currentMonth))
+    )
+    if(selectedDateIndex.month === undefined)
+      activeMonth === currentMonth ? setActiveRow(selectedDateIndex.row) : setActiveRow(0)
+    else
+      activeMonth === selectedDateIndex.month ? setActiveRow(selectedDateIndex.row) : setActiveRow(0)
   }, [activeMonth])
 
   const todaysIndex: any | {
       row: number;
       column: number;
-  } = findIndex(daysArray, parseInt(currentDay), getMonthName(currentMonth, 'short'))
+  } = findIndex(daysArray, parseInt(currentDay), getMonthName(currentMonth, 'short', lang))
 
-  const [selectedDayIndex, setSelectedDayIndex] = useState(todaysIndex)
+  const [selectedDateIndex, setSelectedDateIndex] = useState<{
+    row: number;
+    column: number;
+    day: number;
+    month: number;
+    year: number
+  }>(todaysIndex)
 
   const daysOfWeek = {
-    en: [
+    'en-US': [
       { short: 'Sun', long: 'Sunday' },
       { short: 'Mon', long: 'Monday' },
       { short: 'Tue', long: 'Tuesday' },
@@ -157,7 +187,7 @@ const Schedule = () => {
       { short: 'Fri', long: 'Friday' },
       { short: 'Sat', long: 'Saturday' }
     ],
-    tr: [
+    'tr-TR': [
       { short: 'Paz', long: 'Pazar' },
       { short: 'Pts', long: 'Pazartesi' },
       { short: 'Sal', long: 'Salı' },
@@ -170,15 +200,15 @@ const Schedule = () => {
   
   const months = [
     {
-      name: getMonthName(currentMonth, "long"),
+      name: getMonthName(currentMonth, "long", lang),
       number: currentMonth
     },
     {
-      name: getMonthName(getNextMonth(currentMonth), "long"),
+      name: getMonthName(getNextMonth(currentMonth), "long", lang),
       number: getNextMonth(currentMonth)
     },
     {
-      name: getMonthName(getNextMonth(currentMonth, true), "long"),
+      name: getMonthName(getNextMonth(currentMonth, true), "long", lang),
       number: getNextMonth(currentMonth, true)
     }
   ];
@@ -195,12 +225,12 @@ const Schedule = () => {
   }
 
   return (
-    <div className="space-y-5 select-none">
+    <div className="space-y-5 -mt-2.5 select-none">
       <LogPanel activeMonth={activeMonth}
       activeYear={activeYear}
       activeTime={activeTime}
       activeRow={activeRow}
-      selectedDay={selectedDayIndex}
+      selectedDate={selectedDateIndex}
       />
       <div className="grid grid-cols-3 gap-3">
         {months.map((item, key) => (
@@ -266,15 +296,14 @@ const Schedule = () => {
                   <div
                     key={key}
                     onClick={() =>
-                      item.month === getMonthName(activeMonth, "short")
-                        ? setSelectedDayIndex({ row: index, column: key })
+                      item.month === getMonthName(activeMonth, "short", lang)
+                        ? setSelectedDateIndex({ row: index, column: key, day: item.number , month: activeMonth, year: activeYear })
                         : undefined
                     }
                     className={`w-full flex flex-col px-8 space-y-2 text-center items-center select-none justify-center py-4 ${
-                      item.month === getMonthName(activeMonth, "short")
-                        ? selectedDayIndex.row === index &&
-                          selectedDayIndex.column === key
-                          ? item.month === getMonthName(currentMonth, "short")
+                      item.month === getMonthName(activeMonth, "short", lang)
+                        ? selectedDateIndex.row === index && selectedDateIndex.column === key
+                          ? item.month === getMonthName(selectedDateIndex.month, 'short', lang)
                             ? "text-white bg-indigo-600 cursor-pointer"
                             : ""
                           : "hover:text-white hover:bg-indigo-600 cursor-pointer"
@@ -319,20 +348,14 @@ const Schedule = () => {
       </div>
       <div className="flex flex-col justify-center items-center space-y-2">
         <h3 className="max-w-sm font-semibold border-b text-center border-zinc-950/30 px-6 py-2">
-          Select a time slot
+          Randevu saatini seçiniz
         </h3>
-        <div className="flex space-x-4 text-sm">
-          <span className="text-indigo-700 font-medium">
-            Istanbul Time (UTC +3) {currentTime}
-          </span>
+        <div className="flex space-x-3 items-center text-sm">
+          <span className="text-indigo-700 font-medium">Istanbul Saati (UTC +3)</span>
+          <div className='w-1 h-1 bg-zinc-950/70 rounded-full'></div>
+          <span className='text-indigo-700 font-semibold'>{currentTime}</span>
+          <div className='w-1 h-1 bg-zinc-950/70 rounded-full'></div>
           <div className="flex items-center space-x-2 text-zinc-950/70">
-            <svg
-              viewBox="0 0 2 2"
-              aria-hidden="true"
-              className="w-0.5 fill-current"
-            >
-              <circle cx="1" cy="1" r="1"></circle>
-            </svg>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -347,7 +370,7 @@ const Schedule = () => {
                 d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>45 minute meeting</span>
+            <span>45 dakika görüşme</span>
           </div>
         </div>
       </div>
