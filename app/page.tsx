@@ -73,9 +73,7 @@ export default function Home() {
           <Link className='flex group justify-center items-center px-4 py-6 bg-indigo-300/50 hover:bg-indigo-300 rounded text-center text-sm' href='/about'>
             Eğitim geçmişim ve daha fazla bilgi için &quot;Hakkımda&quot; sayfasına göz atın
             <div className='p-2 border border-zinc-950/80 rounded-full ml-4'>
-              <div className="text-3xl group w-fit grid" style={{
-                clipPath: 'inset(0 0 0 0 );'
-              }} >
+              <div className="text-3xl group w-fit grid overflow-hidden">
                 <div className="[grid-area:1/1] flex items-center justify-center transition ease-in-out group-hover:delay-300 translate-y-10 -translate-x-10 group-hover:translate-y-0 group-hover:translate-x-0">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
