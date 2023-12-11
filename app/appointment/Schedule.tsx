@@ -136,7 +136,7 @@ const Schedule = () => {
   }
 
   const lang = 'tr-TR'
-  const areaHight = 88 // 88 | 176 (px)
+  const areaHight = 76 // 88 | 176 (px)
   const date = new Date()
   const ymd = date.toISOString().split('T')[0].split('-')
   const currentYear = parseInt(ymd[0])
@@ -225,7 +225,7 @@ const Schedule = () => {
   }
 
   return (
-    <div className="space-y-5 -mt-2.5 select-none">
+    <div className="space-y-5 select-none">
       <LogPanel activeMonth={activeMonth}
       activeYear={activeYear}
       activeTime={activeTime}
@@ -300,7 +300,7 @@ const Schedule = () => {
                         ? setSelectedDateIndex({ row: index, column: key, day: item.number , month: activeMonth, year: activeYear })
                         : undefined
                     }
-                    className={`w-full flex flex-col px-8 space-y-2 text-center items-center select-none justify-center py-4 ${
+                    className={`w-full flex flex-col px-8 space-y-1 text-center items-center select-none justify-center py-2 ${
                       item.month === getMonthName(activeMonth, "short", lang)
                         ? selectedDateIndex.row === index && selectedDateIndex.column === key
                           ? item.month === getMonthName(selectedDateIndex.month, 'short', lang)
@@ -311,9 +311,9 @@ const Schedule = () => {
                     }`}
                   >
                     <span
-                      className={`font-bold ${
+                      className={`font-bold px-2 py-1 ${
                         todaysIndex.row === index && todaysIndex.column === key
-                          ? "px-2 text-white bg-indigo-600 rounded-full"
+                          ? "text-white bg-indigo-600 rounded-full"
                           : ""
                       }`}
                     >
