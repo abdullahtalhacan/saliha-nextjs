@@ -8,120 +8,157 @@ const Appointment = () => {
         max: 65
     }
     return (
-        <div className="max-w-5xl px-4 py-5 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-            <div className="bg-white rounded-xl shadow p-4 sm:p-7">
-                <div className="mb-8 text-center">
-                    <h2 className="text-xl font-bold text-gray-800">
-                        Randevu Formu
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                        Aşağıdaki bilgileri doldurarak başvurunuzu yapınız.
-                    </p>
-                </div>
-
-                <div className="grid sm:grid-cols-12 gap-2 sm:gap-6">
-
-                    <div className="sm:col-span-3">
-                        <label htmlFor="af-account-full-name" className="inline-block text-sm text-gray-800 mt-2.5">
-                            Tam Adınız
-                        </label>
-                        
-                    </div>
-                    <div className="sm:col-span-9">
-                        <div className="sm:flex">
-                            <input id="af-account-full-name" type="text" className="py-2 px-3 pe-11 block w-full border-zinc-950/20 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="Adınız" />
-                            <input type="text" className="py-2 px-3 pe-11 block w-full border-zinc-950/20 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="Soyadınız" />
+        <div className='max-w-5xl px-4 py-5 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
+            <form className='bg-white rounded-xl shadow p-4 sm:p-7'>
+                <div className="space-y-8">
+                    <div className="border-b border-gray-900/10 pb-8">
+                        <div className='text-center'>
+                            <h2 className="text-xl font-bold text-gray-800">
+                                Randevu Formu
+                            </h2>
+                            <p className="text-sm text-gray-600">
+                                Aşağıdaki bilgileri doldurarak başvurunuzu yapınız.
+                            </p>
                         </div>
-                    </div>
 
-                    <div className="sm:col-span-3">
-                        <label htmlFor="af-account-email" className="inline-block text-sm text-gray-800 mt-2.5">
-                            Mail
-                        </label>
-                    </div>
-
-                    <div className="sm:col-span-9">
-                        <input type="email" className="py-2 px-3 pe-11 block w-full border-zinc-950/20 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="mailadresiniz@site.com" />
-                    </div>
-
-                    <div className="sm:col-span-3">
-                        <label htmlFor="af-account-password" className="inline-block text-sm text-gray-800 mt-2.5">
-                            Randevu Zamanı
-                        </label>
-                    </div>
-
-                    <div className="sm:col-span-9">
-                        <Schedule />
-                    </div>
-
-
-                    <div className="sm:col-span-3">
-                        <div className="inline-block">
-                            <label htmlFor="af-account-phone" className="inline-block text-sm text-gray-800 mt-2.5">
-                                Telefon
-                            </label>
-                            <span className="text-sm text-gray-400">
-                                (Whatsapp)
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="sm:col-span-9">
-                        <div className="sm:flex">
-                            <input type="text" className="py-2 px-3 pe-11 block w-full border-zinc-950/20 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="+x(xxx)xxx-xx-xx" />
-                        </div>
-                    </div>
-
-                    <div className="sm:col-span-3">
-                        <label htmlFor="af-account-gender-checkbox" className="inline-block text-sm text-gray-800 mt-2.5">
-                            Cinsiyet
-                        </label>
-                    </div>
-
-                    <div className="sm:col-span-9">
-                        <fieldset>
-                            <div className="sm:flex">
-                                <label htmlFor="male" className="flex py-2 px-3 w-full border border-zinc-950/20 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 disabled:opacity-50 disabled:pointer-events-none">
-                                    <input id='male' type="radio" name="gender" value="male" className="shrink-0 mt-0.5 border-zinc-950/20 rounded-full text-blue-600 focus:ring-0 focus:ring-offset-0 disabled:opacity-50 disabled:pointer-events-none" />
-                                    <span className="text-sm text-gray-500 ms-3">Erkek</span>
+                        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Adınız
                                 </label>
-
-                                <label htmlFor="female" className="flex py-2 px-3 w-full border border-zinc-950/20 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 disabled:opacity-50 disabled:pointer-events-none">
-                                    <input id="female" type="radio" name="gender" value="female" className="shrink-0 mt-0.5 border-zinc-950/20 rounded-full text-blue-600 focus:ring-0 focus:ring-offset-0 disabled:opacity-50 disabled:pointer-events-none" />
-                                    <span className="text-sm text-gray-500 ms-3">Kadın</span>
-                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="first-name"
+                                        id="first-name"
+                                        autoComplete="given-name"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
                             </div>
-                        </fieldset>
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Soyadınız
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="last-name"
+                                        id="last-name"
+                                        autoComplete="family-name"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Mail Adresi
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Telefon <span className='text-gray-400'>(Whatsapp)</span>
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="last-name"
+                                        id="last-name"
+                                        autoComplete="family-name"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+
+
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Cinsiyet
+                                </label>
+                                <div className="mt-2 flex items-center">
+                                    <div className='w-1/2 flex gap-x-2 items-center border border-zinc-950/20 shadow-sm border-r-0 py-1.5 px-2 rounded-l-md'>
+                                        <input
+                                            id="push-email"
+                                            name="push-notifications"
+                                            type="radio"
+                                            className="h-4 w-4 border-zinc-950/20 text-indigo-600 focus:ring-indigo-600"
+                                        />
+                                        <label htmlFor="push-email" className="block text-sm font-medium leading-6 text-gray-900">
+                                            Erkek
+                                        </label>
+                                    </div>
+                                    <div className='w-1/2 flex gap-x-2 items-center border border-zinc-950/20 shadow-sm py-1.5 px-2 rounded-r-md'>
+                                        <input
+                                            id="push-email"
+                                            name="push-notifications"
+                                            type="radio"
+                                            className="h-4 w-4 border-zinc-950/20 text-indigo-600 focus:ring-indigo-600"
+                                        />
+                                        <label htmlFor="push-email" className="block text-sm font-medium leading-6 text-gray-900">
+                                            Kadın
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Yaş
+                                </label>
+                                <div className="mt-2">
+                                    <select
+                                        id="country"
+                                        name="country"
+                                        autoComplete="country-name"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    >
+                                        {
+                                            Array.from(new Array(ageRange.max - ageRange.min), (_, index) => (
+                                                <option key={index} value={index + ageRange.min}>{index + ageRange.min}</option>
+                                            ))
+                                        }
+                                        <option value="65+">65+</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div className="sm:col-span-3">
-                        <label htmlFor="af-account-bio" className="inline-block text-sm text-gray-800 mt-2.5">
-                            Yaş
-                        </label>
+                    <div className='w-full flex items-center justify-center'>
+                        <div className="max-w-2xl pb-8 px-6">
+                            <Schedule />
+                        </div>
                     </div>
-
-                    <div className="sm:col-span-9">
-                        <select id="af-submit-app-category" className="py-2 px-3 pe-9 block w-full border-zinc-950/20 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                            {
-                                Array.from(new Array(ageRange.max - ageRange.min), (_, index) => (
-                                    <option key={index} value={index + ageRange.min}>{ index + ageRange.min }</option>
-                                ))
-                            }
-                            <option value="65+">65+</option>
-                        </select>
-                    </div>
-
-                    <div className='sm:col-span-3'></div>
-                    <div className="sm:col-span-9"><WarningBox /></div>
                 </div>
 
-                <div className="mt-5 flex justify-end gap-x-2">
-                    <button type="button" className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                <div className=""><WarningBox /></div>
+
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                    <button
+                        type="submit"
+                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
                         Randevuyu Tamamla
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
+        
     )
 }
 
