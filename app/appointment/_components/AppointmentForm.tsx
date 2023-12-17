@@ -250,7 +250,7 @@ const AppointmentForm = () => {
         <AgreementBox state={handleRegister}>
           <ul className='mt-2 list-disc'>
             <li>Seans süresi 45 Dakikadır.</li>
-            <li>Seans ücreti <span className="font-semibold">300 TL</span>'dir.</li>
+            <li>Seans ücreti <span className="font-semibold">300 TL</span>&apos;dir.</li>
             <li>Randevunuz seans ücreti ödendikten sonra aktif hale gelecektir.</li>
             <li>Randevunuzu seans saatinden 12 saat öncesine kadar düzenleyebilir veya iptal edeblirsiniz.</li>
             <li>Seans ücretini IBAN adresimize gönderebilirsiniz. Gönderme işlemi sırasında mutlaka açıklama kısmına <span className="underline underline-offset-2">tam adınızı</span> yazınız.</li>
@@ -258,7 +258,7 @@ const AppointmentForm = () => {
               (componentsData.selectedDay.day && componentsData.timeSlot) &&
               <div className='w-full flex justify-center py-1'>
                 <h4 className="w-max font-bold px-2 py-1.5 bg-zinc-950/10 rounded-md">
-                  Seansınız {componentsData.selectedDay.day} {getMonthName(componentsData.selectedDay.month as number, "long")} {componentsData.selectedDay.year} tarihinde {getDayName((`${componentsData.selectedDay.year}-${componentsData.selectedDay.month}-${componentsData.selectedDay.day}`), 'long')} günü, saat {componentsData.timeSlot}'da yapılacaktır
+                  Seansınız {componentsData.selectedDay.day} {getMonthName(componentsData.selectedDay.month as number, "long")} {componentsData.selectedDay.year} tarihinde {getDayName((`${componentsData.selectedDay.year}-${componentsData.selectedDay.month}-${componentsData.selectedDay.day}`), 'long')} günü, saat {componentsData.timeSlot}&apos;da yapılacaktır
                 </h4>
               </div>
             }
