@@ -66,25 +66,31 @@ const AppointmentForm = () => {
       setError('agreement', { message: 'Koşullari kabul ediniz' })
     else{
       setLoading(true)
-      let formData = data
-      formData['schedule'] = componentsData.selectedDay
-      formData['timeSlot'] = componentsData.timeSlot
-      formData['agreement'] = componentsData.agreement
-      await axios.post('http://localhost:3000/api/appointment', {
-        data: formData
-      }).then((res) => {
-        setLoading(false)
-        console.log("🚀 ~ constonSubmit:SubmitHandler<FieldValues>= ~ res:", res)
-      }).catch(({ response }) => {
-        setLoading(false)
-        console.log(response)
-        if(response.status === 403) {
-          setError(response.data[0].validation,{ message: response.data[0].message })
-          setFocus(response.data[0].validation)
-        } else {
-          setError("alertBox",{})
-        }
-      })
+      try {
+        let formData = data
+        formData['schedule'] = componentsData.selectedDay
+        formData['timeSlot'] = componentsData.timeSlot
+        formData['agreement'] = componentsData.agreement
+        await axios.post('http://localhost:3000/api/appointment', {
+          data: formData
+        }).then((res) => {
+          setLoading(false)
+          console.log("🚀 ~ constonSubmit:SubmitHandler<FieldValues>= ~ res:", res)
+        }).catch(({ response }) => {
+          setLoading(false)
+          console.log(response)
+          if (response && response.status === 403) {
+            setError(response.data[0].validation, { message: response.data[0].message })
+            setFocus(response.data[0].validation)
+          } else {
+            setError("alertBox", {})
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        setError("alertBox", {})
+      }
+      
     }
 
     
