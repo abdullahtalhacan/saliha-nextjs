@@ -98,7 +98,7 @@ const AppointmentForm = ({ state, data }: any) => {
         //@ts-ignore
         setActiveTime(undefined)
       }
-      if(selectedDayDate.day === undefined){
+      if(selectedDayDate && selectedDayDate.day === undefined){
         renderControlRef.current = true
       }
     }
