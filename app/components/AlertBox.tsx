@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
-import { ArrowSmallRightIcon, CheckCircleIcon, XMarkIcon, ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
+import { ArrowRightIcon } from '@heroicons/react/16/solid';
+import { CheckCircleIcon, XMarkIcon, ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 type AlertBoxType = {
     type: "danger" | "warning" | "info" | "success";
@@ -87,7 +88,7 @@ const AlertBox = ({type, title, action="none", link, linkName, target, children}
         <div className="ml-3 flex-grow">
           {title && <h3 className={`font-medium text-sm ${typeVariants[type].text[800]}`}>{ title }</h3>}
           <div className={`${title ? 'mt-2' : ""} text-sm ${typeVariants[type].text[700]}`}>
-            <p>{children}</p>
+            {children}
           </div>
         </div>
         <div className={`${typeVariants[type].text[600]} ${action !== 'dismiss' ? 'flex group/link items-center ml-auto pl-3' : ''}`}>
@@ -102,7 +103,7 @@ const AlertBox = ({type, title, action="none", link, linkName, target, children}
               <p className='ml-6'>
                 <a href={link} target={target} className="whitespace-nowrap flex items-center text-sm font-medium">
                   { linkName } 
-                  <ArrowSmallRightIcon className='w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-all duration-200' strokeWidth={2}/>
+                  <ArrowRightIcon className='w-3 h-3 ml-1 group-hover/link:translate-x-1 transition-all duration-200' strokeWidth={2}/>
                 </a>
               </p>
             )

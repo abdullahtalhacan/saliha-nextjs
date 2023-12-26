@@ -9,7 +9,7 @@ const schema = z.object({
     age: z.string().refine((val) => val !== '65+' ? (parseInt(val) >= 10 && parseInt(val) <= 65) : true, {
         message: 'Age must be between 10 to 65 or "65+".',
     }),
-    schedule: z.object({
+    date: z.object({
         day: z.number().min(1).max(31),
         month: z.number().min(1).max(12),
         year: z.coerce.number() 
@@ -17,7 +17,7 @@ const schema = z.object({
         .gte(1000)
         .lte(9999)
     }),
-    timeSlot: z.string(),
+    time: z.string(),
     agreement: z.boolean()
 })
 

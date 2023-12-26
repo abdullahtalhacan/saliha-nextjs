@@ -1,109 +1,117 @@
-import React from 'react'
+'use client'
+import React, { useState, useEffect } from "react";
+import Loading from "../components/Loading";
+import AlertBox from "../components/AlertBox";
+import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/24/solid";
+import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
 
 const Contact = () => {
-  return (
-        <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-        <div className="max-w-xl mx-auto">
-            <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-800 sm:text-4xl">
-                Contact us
-            </h1>
-            <p className="mt-1 text-gray-600">
-                We&aposd love to talk about how we can help you.
-            </p>
+    const {
+        register,
+        handleSubmit,
+        setFocus,
+        setError,
+        clearErrors,
+        formState: { errors },
+    } = useForm();
+    const [loading, setLoading] = useState<boolean>(false);
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        setLoading(true)
+        try {
+            await axios.post('http://localhost:3000/api/mail', {
+                data
+            }).then((res) => {
+                setLoading(false)
+                setError("alertBox", {type: "success", message: "Mesajınız bize ulaştı. En kısa sürede sizlere geri dönüş yapacagız."})
+            }).catch(({response}) => {
+                setLoading(false)
+                console.log(response)
+                if (response && response.status === 403) {
+                    setError(response.data[0].validation, { message: response.data[0].message })
+                    setFocus(response.data[0].validation)
+                } else {
+                    setError("alertBox", { type: "danger", message: "Üzgünüz şu anda form ile mail gönderilemiyor. Lütfen telefon ile veya mail adresinden bizimle iletişime geçiniz." })
+                }
+            })
+        } catch (error) {
+            setLoading(false)
+            setError("alertBox", {type: "danger", message: "Üzgünüz şu anda form ile mail gönderilemiyor. Lütfen telefon ile veya mail adresinden bizimle iletişime geçiniz."})
+        }
+    };
+    useEffect(() => {console.log("🚀 ~ Contact ~ errors:", errors)}, [errors])
+    
+    return (
+        <div className="py-10">
+            <div className="max-w-5xl  mx-auto rounded-xl shadow bg-white">
+                <div className="grid grid-cols-2 gap-28 px-4 py-5 sm:px-6 lg:px-12 lg:py-14">
+                    <div className="flex flex-col space-y-5">
+                        <h1 className="text-3xl font-bold text-gray-800 sm:text-4xl">Bizimle iletişime geçin</h1>
+                        <p className="mt-1 text-gray-600">Size daha iyi hizmet verebilmek için buradayız. Her türlü soru, öneri veya geri bildirimleriniz için bize aşağıdaki form ile yada iletişim bilgilerinden ulaşabilirsiniz.</p>
+                        <form onSubmit={e => {
+                            clearErrors()
+                            handleSubmit(onSubmit)(e)
+                        }}>
+                            <div className="flex flex-col space-y-3">
+                                <div>
+                                    <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                        Adınız {errors.name && <span className="text-red-600">*</span>}
+                                    </label>
+                                    <div className="mt-2">
+                                        <input {...register("name", { required: true })} id="name" type="text" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none invalid:border-red-400 invalid:text-red-500 focus:invalid:border-red-400 focus:invalid:ring-red-400" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                        Mail Adresi {errors.email && <span className="text-red-600">*</span>}
+                                    </label>
+                                    <div className="mt-2">
+                                        <input {...register("email", { required: true })} id="email" type="email" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none invalid:border-red-400 invalid:text-red-500 focus:invalid:border-red-400 focus:invalid:ring-red-400" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="message" className="block text-sm font-medium leading-6 text-gray-900">
+                                        Mesajınız {errors.message && <span className="text-red-600">*</span>}
+                                    </label>
+                                    <div className="mt-2">
+                                        <textarea {...register("message", { required: true })} name="message" id="message" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-zinc-950/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none invalid:border-red-400 invalid:text-red-500 focus:invalid:border-red-400 focus:invalid:ring-red-400"></textarea>
+                                    </div>
+                                </div>
+                                <div className="mt-6 flex items-center justify-end gap-x-6">
+                                    <button type="submit" className="rounded-md flex bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        {loading && <Loading />} Gönder
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div className="flex flex-col space-y-10 items-center">
+                        <img src="/contact/image.svg" alt="" />
+                        <div>
+                            <div className="flex items-center space-x-4">
+                                <PhoneIcon className="h-4 w-4" />
+                                <span>+90 555 555 55 55</span>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <EnvelopeIcon className="h-4 w-4" />
+                                <span>info@salihanurcan.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {
+                    errors.alertBox && (
+                        <div className="w-full mt-3 px-4 pb-5 sm:px-6 lg:px-12">
+                            <AlertBox type={errors.alertBox.type as "danger" | "warning" | "info" | "success"} action="dismiss">
+                                <span>{ errors.alertBox.message as any }</span>
+                            </AlertBox>
+                        </div>
+                    )
+                }
             </div>
         </div>
+    );
+};
 
-        <div className="mt-12 max-w-lg mx-auto">
-            <div className="flex flex-col border border-zinc-950/30 rounded-xl p-4 sm:p-6 lg:p-8">
-            <h2 className="mb-8 text-xl font-semibold text-gray-800">
-                Fill in the form
-            </h2>
-
-            <form>
-                <div className="grid gap-4 lg:gap-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                    <div>
-                    <label htmlFor="hs-firstname-contacts-1" className="block mb-2 text-sm text-gray-700 font-medium">First Name</label>
-                    <input type="text" name="hs-firstname-contacts-1" id="hs-firstname-contacts-1" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
-                    </div>
-
-                    <div>
-                    <label htmlFor="hs-lastname-contacts-1" className="block mb-2 text-sm text-gray-700 font-medium">Last Name</label>
-                    <input type="text" name="hs-lastname-contacts-1" id="hs-lastname-contacts-1" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                    <div>
-                    <label htmlFor="hs-email-contacts-1" className="block mb-2 text-sm text-gray-700 font-medium">Email</label>
-                    <input type="email" name="hs-email-contacts-1" id="hs-email-contacts-1" autoComplete="email" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
-                    </div>
-
-                    <div>
-                    <label htmlFor="hs-phone-number-1" className="block mb-2 text-sm text-gray-700 font-medium">Phone Number</label>
-                    <input type="text" name="hs-phone-number-1" id="hs-phone-number-1" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
-                    </div>
-                </div>
-
-                <div>
-                    <label htmlFor="hs-about-contacts-1" className="block mb-2 text-sm text-gray-700 font-medium">Details</label>
-                    <textarea id="hs-about-contacts-1" name="hs-about-contacts-1" rows={4} className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"></textarea>
-                </div>
-                </div>
-
-                <div className="mt-6 grid">
-                <button type="submit" className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Send inquiry</button>
-                </div>
-
-                <div className="mt-3 text-center">
-                <p className="text-sm text-gray-500">
-                    We&aposll get back to you in 1-2 business days.
-                </p>
-                </div>
-            </form>
-            </div>
-        </div>
-
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-4 lg:gap-8">
-            <a className="group flex flex-col h-full text-center rounded-lg hover:bg-gray-100 p-4 sm:p-6" href="#">
-            <svg className="w-9 h-9 text-gray-800 mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-            <div className="mt-5">
-                <h3 className="text-lg font-semibold text-gray-800">Knowledgebase</h3>
-                <p className="mt-1 text-gray-500">We&aposre here to help with any questions or code.</p>
-                <p className="mt-5 inline-flex items-center gap-x-1 font-medium text-blue-600">
-                Contact support
-                <svg className="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </p>
-            </div>
-            </a>
-
-            <a className="group flex flex-col h-full text-center rounded-lg hover:bg-gray-100 p-4 sm:p-6" href="#">
-            <svg className="w-9 h-9 text-gray-800 mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
-            <div className="mt-5">
-                <h3 className="text-lg font-semibold text-gray-800">FAQ</h3>
-                <p className="mt-1 text-gray-500">Search our FAQ for answers to anything you might ask.</p>
-                <p className="mt-5 inline-flex items-center gap-x-1 font-medium text-blue-600">
-                Visit FAQ
-                <svg className="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </p>
-            </div>
-            </a>
-
-            <a className="group flex flex-col h-full text-center rounded-lg hover:bg-gray-100 p-4 sm:p-6" href="#">
-            <svg className="w-9 h-9 text-gray-800 mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg>
-            <div className="mt-5">
-                <h3 className="text-lg font-semibold text-gray-800">Developer APIs</h3>
-                <p className="mt-1 text-gray-500">Check out our development quickstart guide.</p>
-                <p className="mt-5 inline-flex items-center gap-x-1 font-medium text-blue-600">
-                Contact sales
-                <svg className="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </p>
-            </div>
-            </a>
-        </div>
-        </div>
-  )
-}
-
-export default Contact
+export default Contact;

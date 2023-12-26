@@ -22,7 +22,7 @@ export const getFirstDayOfMonth = (year: number, month: number): number => {
  * // Outputs: "Wednesday"
  * 
  */
-export const getDayName = (date: string, format: "short" | "long" | "narrow" | undefined, lang: string = "tr-TR") => {
+export const getDayName = (date: any, format: "short" | "long" | "narrow" | undefined, lang: string = "tr-TR") => {
     const newDate = new Date(date);
     return newDate.toLocaleDateString(lang, { weekday: format });
 };
@@ -32,18 +32,18 @@ export const getDayName = (date: string, format: "short" | "long" | "narrow" | u
  * Get the name of a month based on its number.
  * @param {number} monthNumber - The month number (1-12).
  * @param {"short" | "numeric" | "2-digit" | "long" | "narrow" | undefined} format - The format of the month name.
- * @param {string} [lang="tr-TR"] - The language code for localization (default is "tr-TR").
+ * @param {Intl.LocalesArgument} [lang="tr-TR"] - The language code for localization (default is "tr-TR").
  * @returns {string} The name of the month.
 */
 export const getMonthName = (
     monthNumber: number,
     format: "short" | "numeric" | "2-digit" | "long" | "narrow" | undefined,
-    lang: string = "tr-TR"
+    locale: Intl.LocalesArgument = "tr-TR"
 ): string => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
 
-    return date.toLocaleString(lang, {
+    return date.toLocaleString(locale, {
         month: format,
     });
 };
@@ -67,19 +67,13 @@ export const getWeekDays = (startingDay: number, lang: string, format: 'long' | 
     return weekDays;
 };
 
-export const generateMonthArray = (year: number, month: number, lang: string) => {
+export const generateMonthArray = (year: number, month: number) => {
     const daysInMonth = getDaysInMonth(year, month)
     const firstDayOfMonth = getFirstDayOfMonth(year, month)
-
-    // Calculate the last day of the previous month
     const lastDayOfPrevMonth = getDaysInMonth(year, getPrevMonth(month))
-
-    // Calculate the number of days to fill from the previous month
     const daysToFillFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth;
-
     const totalDays = daysInMonth + daysToFillFromPrevMonth;
     const numRows = Math.ceil(totalDays / 7);
-
     let daysArray = [];
     let currentDay = 1;
 
@@ -87,23 +81,20 @@ export const generateMonthArray = (year: number, month: number, lang: string) =>
         let week = [];
         for (let col = 0; col < 7; col++) {
             if (row === 0 && col < daysToFillFromPrevMonth) {
-                // Fill in the days from the previous month
                 week[col] = {
                     number: lastDayOfPrevMonth - daysToFillFromPrevMonth + 1 + col,
-                    month: getMonthName(getPrevMonth(month), 'short', lang)
+                    month: getPrevMonth(month)
                 }
             } else if (currentDay <= daysInMonth) {
-                // Fill in the days of the current month
                 week[col] = {
                     number: currentDay,
-                    month: getMonthName(month, 'short', lang)
+                    month: month
                 };
                 currentDay++;
             } else {
-                // Fill in the days from the next month
                 week[col] = {
                     number: currentDay - daysInMonth,
-                    month: getMonthName(getNextMonth(month), 'short', lang)
+                    month: getNextMonth(month)
                 }
                 currentDay++;
             }
@@ -142,7 +133,7 @@ export const getCurrentTime = (timezone: string, lang: string = 'tr-TR'): string
 export const generateTimestamp = (year: number, month: number, day: number) => {
     const now = new Date();
     const currentYear = year || now.getFullYear();
-    const currentMonth = String((month || now.getMonth()) + 1).padStart(2, '0'); // Months are zero-based
+    const currentMonth = String((month || now.getMonth())).padStart(2, '0'); // Months are zero-based
     const currentDay = String(day || now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -153,7 +144,7 @@ export const generateTimestamp = (year: number, month: number, day: number) => {
     return timestamp;
   };
 
-export const findIndex = (array: {}[][], targetNumber: number, targetMonth: string) => {
+export const findIndex = (array: {}[][], targetNumber: number, targetMonth: number) => {
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < array[i].length; j++) {
             //@ts-ignore
@@ -195,5 +186,17 @@ export const objectIndexValidate = (objectName: { [key: string]: any }, indexTyp
  * @returns {string} The randomly generated code.
  */
 export const generateRandomCode = () => {
-    return `${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}`;
-  };
+    const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const randomLetter = Array(3).join().split(',').map(function() { return s.charAt(Math.floor(Math.random() * s.length)); }).join('');
+    return randomLetter + (Math.floor(Math.random() * 900) + 100);
+};
+
+export const copyToClipboard = (text: string): boolean => {
+    try {
+        navigator.clipboard.writeText(text).then(() => {
+        })
+    } catch (error) {
+        return false
+    }
+    return false
+}

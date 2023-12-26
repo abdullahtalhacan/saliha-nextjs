@@ -18,7 +18,7 @@ model Appointment {
   phone      String
   gender     String
   age        String
-  schedule   String
+  date       String
   time       String
   verifyCode String
   status     String   @default("waiting")
